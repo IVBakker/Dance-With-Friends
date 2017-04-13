@@ -1,1 +1,27 @@
- <script src="//connect.facebook.net/en_US/all.js"></script>
+
+<div id="show"></div>
+
+<script src="/home/francois.regnoult/git/Dance-With-Friends/static/js/lib/jquery.min.js"></script>
+<script>
+    var inputs = [];
+    var start_time = Date.now();
+    $(document).on('keydown',function(e){
+        var hit_box = '';
+        if (e.which === 72) { //h
+                hit_box = 'l';
+        } else if (e.which === 74) { //j
+                hit_box = 'd';
+        } else if (e.which === 75) { //k
+            hit_box = 'u';
+        } else if (e.which === 76) { //l
+                hit_box = 'r';
+        }
+        if (hit_box.length > 0)
+        {
+            var elapsed = Date.now() - start_time;
+            //console.log(hit_box);
+            inputs.push({'timestamp': elapsed, 'type': hit_box});
+            $('#show').html(JSON.stringify(inputs));
+        }
+    });
+</script>

@@ -64,21 +64,22 @@ socketIo.sockets.on('connection', function (socket) {
 		// socket is only the newly connected socket
 		socket.on('start', function(data) { // Start game loop when someone hits it
 				if (!state.running) {
-						state.time_started = new Date().getTime();
-						state.running = true;
+					state.time_started = new Date().getTime();
+					state.running = true;
 
-						var interv = setInterval(function(){game_loop(socket);}, update_speed);
-						setTimeout(function(){
-							console.log("End Game");
-							clearInterval(interv);
-							reset_all();
-							socketIo.sockets.emit('endGame');
-						}, 10*1000);
+					var interv = setInterval(function(){game_loop(socket);}, update_speed);
+					setTimeout(function(){
+						console.log("End Game");
+						clearInterval(interv);
+						reset_all();
+						socketIo.sockets.emit('endGame');
+					}, 10*1000*60);
+
+					//return the game time
+					socketIo.sockets.emit('startGame', {
+							time: new Date().getTime() - state.time_started
+					});
 				}
-				//return the game time
-				socket.emit('startGame', {
-						time: new Date().getTime() - state.time_started
-				});
 		});
 		
 
@@ -88,7 +89,12 @@ socketIo.sockets.on('connection', function (socket) {
 
 		socket.on('updateScore', function(data) {
 				var user = game_state.users[socket.id];
-				user.score = data.score;
+				try {
+					user.score = parseFloat(data.score);
+				}
+				catch(err) {
+					console.log("Err on update score:", err);
+				}
 		});
 
 		// used for time synchronization
