@@ -9,8 +9,8 @@ require.config({
     backbone: '../lib/backbone-min',
     bootstrap: '../lib/bootstrap.min',
     bufferloader: '../lib/buffer-loader',
-    socketio: '/socket.io/socket.io.js',
-    soundmanager2: '../lib/soundmanager2-jsmin',
+    socketio: '../lib/socket.io.min',
+    soundmanager2: '../lib/soundmanager2-jsmin'
   },
   shim: {
     underscore: {
@@ -28,7 +28,7 @@ require.config({
 require([
   // Load our app module and pass it to our definition function
   'app',
-  'router',
+  'router'
 ], function(App, Router) {
     // The "app" dependency is passed in as "App"
 //dump facebook connect here

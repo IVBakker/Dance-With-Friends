@@ -3,7 +3,7 @@ define([
   'jquery',
   'underscore',
   'backbone',
-  'app',
+  'app'
 ], function($, _, Backbone, App) {
     var Arrow = App.Arrow || {};
 
@@ -13,7 +13,7 @@ define([
             direction: undefined,
             pos: 0.0,
             finalTimestamp: undefined // This should be overwritten
-        },
+        }
     });
 
     Arrow.View = Backbone.View.extend({
@@ -36,7 +36,7 @@ define([
         updatePosition: function(currentTime) {
             var vel = App.gameInstance.get('velocity');
             var timeLeft = this.model.get('finalTimestamp') - currentTime;
-            console.log(currentTime)
+//            console.log(currentTime);
             y = vel * timeLeft;
 
             this.model.set('pos', y);
@@ -84,7 +84,7 @@ define([
             this.renderedEl = $(html);
             this.renderedEl.css('top', this.model.get('pos') +'px');
             arrowContainer.append(this.renderedEl);
-        },
+        }
     });
 
     return Arrow;

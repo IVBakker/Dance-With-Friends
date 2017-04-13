@@ -3,26 +3,23 @@ define([
 ], function(App) {
     var Songs = App.Songs || {};
     Songs['Gangam Style'] = [
-      {'timestamp': 3000, 'type': 'l'}
-      ];
-    Songs['Gangam Style'] = [
       {'timestamp': 6034, 'type': 'l'},
-      {'timestamp': 6515, 'type': 'd'},
+      {'timestamp': 6515, 'type': 'u'},
       {'timestamp': 6936, 'type': 'r'},
       {'timestamp': 7858, 'type': 'd'},
-      {'timestamp': 10599, 'type': 'l'},
+      {'timestamp': 10599, 'type': 'u'},
       {'timestamp': 11501, 'type': 'r'},
-      {'timestamp': 13305, 'type': 'l'},
+      {'timestamp': 13305, 'type': 'u'},
       {'timestamp': 14127, 'type': 'r'},
       {'timestamp': 15168, 'type': 'l'},
-      {'timestamp': 16073, 'type': 'r'},
+      {'timestamp': 16073, 'type': 'u'},
       {'timestamp': 16915, 'type': 'd'},
       {'timestamp': 17857, 'type': 'l'},
       {'timestamp': 18781, 'type': 'r'},
       {'timestamp': 19683, 'type': 'l'},
-      {'timestamp': 20586, 'type': 'd'},
+      {'timestamp': 20586, 'type': 'u'},
       {'timestamp': 21469, 'type': 'r'},
-      {'timestamp': 22410, 'type': 'r'},
+      {'timestamp': 22410, 'type': 'u'},
       {'timestamp': 23312, 'type': 'r'},
       {'timestamp': 24194, 'type': 'l'},
       {'timestamp': 25115, 'type': 'l'},
@@ -33,7 +30,7 @@ define([
       {'timestamp': 30561, 'type': 'r'},
       {'timestamp': 31444, 'type': 'd'},
       {'timestamp': 32385, 'type': 'l'},
-      {'timestamp': 33267, 'type': 'r'},
+      {'timestamp': 33267, 'type': 'u'},
       {'timestamp': 34188, 'type': 'l'},
       {'timestamp': 35089, 'type': 'r'},
       {'timestamp': 36011, 'type': 'd'},
@@ -74,7 +71,7 @@ define([
       {'timestamp': 63284, 'type': 'r'},
       {'timestamp': 63746, 'type': 'd'},
       {'timestamp': 64308, 'type': 'd'},
-      {'timestamp': 67910, 'type': 'd'},
+      {'timestamp': 67910, 'type': 'u'},
       {'timestamp': 68371, 'type': 'd'},
       {'timestamp': 68833, 'type': 'd'},
       {'timestamp': 69274, 'type': 'd'},
@@ -274,8 +271,7 @@ define([
       {'timestamp': 213303, 'type': 'l'},
       {'timestamp': 213304, 'type': 'r'},
       {'timestamp': 213304, 'type': 'd'}
-
-    ]
+    ];
 
     return Songs;
 });

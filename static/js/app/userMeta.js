@@ -4,7 +4,7 @@ define([
   'underscore',
   'backbone',
   'app',
-  'socket',
+  'socket'
 ], function($, _, Backbone, App, Socket) {
     var UserMeta = App.UserMeta || {};
 
@@ -20,16 +20,11 @@ define([
             bad: 0
         },
         initialize: function() {
-            this.on('change:score', this.sync, this);
-            Socket.setUser({
-                id: window.userId,
-                name: window.userName,
-                pic: window.userPic,
-            });
+					this.on('change:score', this.sync, this);
         },
         sync: function() {
             Socket.updateScore(this.get('score'));
-        },
+        }
     });
 
     UserMeta.View = Backbone.View.extend({
@@ -49,7 +44,7 @@ define([
             this.model.set('name', data.name);
             this.model.set('pic', data.pic);
             this.model.set('players', data.users);
-        },
+        }
     });
 
     return UserMeta;

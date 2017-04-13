@@ -1,32 +1,24 @@
 define([
-    'app',
-    'socketio',
+		'app',
+		'socketio'
 ], function(App, SocketIO) {
-    var Socket = App.Socket || {};
-    Socket.socket = Socket.socket || io.connect('http://' + window.hostname + window.socketPort);
+		var Socket = App.Socket || {};
+		var socketpath = location.protocol+'//'+location.hostname+(location.port ? ':'+location.port: '');
+		Socket.socket = Socket.socket || SocketIO(socketpath);
 
-    Socket.startGame = function() {
-        Socket.socket.emit('start', {});
-    }
+		Socket.startGame = function() {
+				Socket.socket.emit('start', {});
+		};
 
-    Socket.doMove = function(move, currentTime) {
-        /*
-        Socket.socket.emit('move', {
-            move: move,
-            currentTime: currentTime
-        });
-        */
-    }
+		Socket.updateScore = function(score) {
+				Socket.socket.emit('updateScore', {
+						score: score
+				});
+		};
 
-    Socket.updateScore = function(score) {
-        Socket.socket.emit('updateScore', {
-            score: score
-        });
-    }
+		Socket.setUser = function(user) {
+				Socket.socket.emit('setUser', user);
+		};
 
-    Socket.setUser = function(user) {
-        Socket.socket.emit('setUser', user);
-    }
-
-    return Socket;
+		return Socket;
 });

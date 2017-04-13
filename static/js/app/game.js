@@ -8,7 +8,7 @@ define([
   'userMeta',
   'socket',
   'bufferloader',
-  'soundmanager2',
+  'soundmanager2'
 ], function($, _, Backbone, App, Arrow, SongMeta, UserMeta, Socket) {
     var Game = App.Game || {};
 
@@ -20,47 +20,55 @@ define([
             game_type: 'hands', // 'feet'
             arrows: {},
             gameFPS: 30,
-            velocity: .1,
+            velocity: .2,
             timeToTop: 5000,
             bufferZoneTime: 3000,
             currentSong: SongMeta['Gangam Style'],
             songIndex: 0 // The current index in the song stamp list
         },
         getTimeOffset: function() {
-            return new Date().getTime() - this.get('startTime')
-        },
+            return new Date().getTime() - this.get('startTime');
+        }
     });
 
     Game.ExclamationModel = Backbone.Model.extend({
         defaults: {
             score: undefined
-        },
+        }
     });
 
     Game.loading_start = function(text) {
         var text = $('<div class="description">' + text + '</div>');
         $('#loading').html('<img src="/static/img/ajax-loader.gif"></img>');
         $('#loading').append(text);
-    }
+    };
+		
+		
+		Game.show_start = function(){
+			$('#loading').append('<button type="button" class="btn btn-primary start_button">Start</button>');
+			$('.start_button').click(function(){
+					Socket.startGame();
+			});
+		};
 
     Game.loading_end = function() {
         $('#loading').html('');
-    }
-
+    };
+		
     Game.scoreToWord = function(score) {
         if (!score) {
             return;
         }
         var word;
-        if (score == 4) {
+        if (score === 4) {
             word = 'perfect';
         }
-        else if (score == 3) {
-            word = 'great'
-        } else if (score == 2) {
-            word = 'good'
-        } else if (score == 1) {
-            word = 'bad'
+        else if (score === 3) {
+            word = 'great';
+        } else if (score === 2) {
+            word = 'good';
+        } else if (score === 1) {
+            word = 'bad';
         }
         return word;
     };
@@ -89,14 +97,14 @@ define([
                 }, 500);
                 this.$el.addClass(word);
             }
-        },
+        }
     });
 
     Game.View = Backbone.View.extend({
         el: $('#game-container'),
         initialize: function(options) {
             this.interval = setInterval($.proxy(this.runGameLoop, this), 1000 / this.model.get('gameFPS'));
-            $(document).on('keydown', $.proxy(this.detectMove, this))
+            $(document).on('keydown', $.proxy(this.detectMove, this));
             this.arrows = [];
 
             $(window).resize($.proxy(function() {
@@ -116,7 +124,7 @@ define([
                  id:'gangamstyle',
                  url:'../static/songs/gangamstyle.mp3'
             });
-            soundManager.setPosition('gangamstyle',this.model.getTimeOffset());
+            soundManager.setPosition('gangamstyle', this.model.getTimeOffset());
             soundManager.play('gangamstyle');
 
             // If we're using feet, position markers:
@@ -137,34 +145,32 @@ define([
         },
         detectMove: function(e) {
             var hit_box = '';
-            if (e.which == 72) { //h
+            if (e.which === 72) { //h
                 hit_box = 'left';
-            } else if (e.which == 74) { //j
+            } else if (e.which === 74) { //j
                 hit_box = 'down';
-            } else if (e.which == 75) { //k
-            } else if (e.which == 76) { //l
+            } else if (e.which === 75) { //k
+							hit_box = 'up';
+            } else if (e.which === 76) { //l
                 hit_box = 'right';
             }
-
             this.processMove(hit_box, this.model.get('currentTime'));
-
-
         },
         processMove: function(move_string, currentTime) {
             move = move_string.charAt(0);
-            if (move) {
+            if (move)
+						{
                 this.showMove(move, currentTime);
                 _.each(this.arrows, function(arrow) {
-                    if (move == arrow.model.get('direction')) {
+                    if (move === arrow.model.get('direction')) {
                         //TODO: check if timestamp is based off the right vars
                         var timeDiff = Math.abs(arrow.model.get('finalTimestamp') - currentTime);
 
                         var score = this.scoreMove(timeDiff);
-                        if (score > 0) {
+                        if (score > 0)
+												{
                             this.updateScore(score, arrow, true);
                         }
-
-
                     }
                 }, this);
             }
@@ -178,7 +184,6 @@ define([
             }, 200);
         },
         showMove: function(move, currentTime) {
-            Socket.doMove(move, currentTime + this.model.get('delay'));
         },
         scoreMove: function(timeDiff) {
             //time diff is in milliseconds
@@ -207,7 +212,7 @@ define([
             var bonus = 0;
             if(score > 1){
                 for(var i = 0; i < 5; i++){
-                    if(score == i){
+                    if(score === i){
                         this.streaks[i] += 1;
                         if(this.streaks[i] >= 3){
                             bonus = (1 << (i - 2)) * 250;
@@ -265,7 +270,8 @@ define([
                 if (currentSong[songIndex].timestamp <
                         this.model.get('timeToTop')
                          + this.model.get('bufferZoneTime')
-                         + currentTime) {
+                         + currentTime)
+								 {
                     this.arrows.push(new Arrow.View({
                         model: new Arrow.Model({
                             direction: currentSong[songIndex].type,
@@ -279,7 +285,6 @@ define([
                 } else { //Otherwise we stop because none past it will be true either
                     stop = true;
                 }
-
             }
         },
 
@@ -292,65 +297,59 @@ define([
             this.model.set('currentTime', currentTime);
         },
         render: function() {
-        },
+        }
     });
 
     Game.initialize = function(user) {
+			var delay = -1;
         var sensor_hit = function(r) {
-            if (r == 0) {
+            if (r === 0) {
                 App.gameView.processMove('left', App.gameInstance.get('currentTime'));
-            } else if (r == 1) {
+            } else if (r === 1) {
                 App.gameView.processMove('down', App.gameInstance.get('currentTime'));
-            } else if (r == 2) {
+            } else if (r === 2) {
                 App.gameView.processMove('right', App.gameInstance.get('currentTime'));
             }
-        }
+        };
 
         var loadSoundManager = function() {
             soundManager.setup({
                 url: '/',
                 preferFlash: false,
                 onready: setDelay
-            })
-        }
-
-        var setDelay = function() {
-            Game.loading_start('Compensating for lag...');
-            var pingCounter = 0;
-            var delay = -1;
-            var requestTimes = [0,0,0,0,0]
-            var responseTimes = [0,0,0,0,0]
-            //TODO: start loading
-            Socket.socket.on('ping', function(data){
-                responseTimes[data.num] = new Date().getTime();
-                pingCounter++;
-                if(pingCounter >= 3) {
-                    var totalDelay = 0;
-                    for(var i = 0; i < 3; i++){
-                        totalDelay += responseTimes[i] - requestTimes[i];
-                    }
-                    delay = totalDelay / (3*2);
-                    //TODO: end loading
-                    Socket.socket.removeListener('ping',  this);
-
-                    console.log('dleay', delay);
-                    Game.loading_end();
-                    initGame(delay);
-                }
             });
-            var getDelay = function() {
-                for(var i = 0; i < 3; i++){
-                    requestTimes[i] = new Date().getTime();
-                    Socket.socket.emit('ping', {num: i});
-                }
-            }
+        };
+        var setDelay = function()
+				{
+					console.log("setDelay called", delay);
+					delay =-1;
+            Game.loading_start('Compensating for lag...');
+            var requestTime = 0;
+            //TODO: start loading
+            Socket.socket.on('ping', function()
+						{
+							if(delay === -1)
+							{
+                var responseTime = new Date().getTime();
+								delay = responseTime - requestTime;
+								Socket.socket.removeListener('ping',  this);
+
+								console.log('delay', delay);
+								Game.loading_end();
+								initGame(delay);
+							}
+            });
+            var getDelay = function()
+						{
+							requestTime = new Date().getTime();
+							Socket.socket.emit('ping');
+            };
             getDelay();
-        }
+        };
 
         var initGame = function(delay) {
-            Game.loading_start('Loading game assets...');
-
-            Socket.startGame();
+            Game.loading_start('Waiting for a player to start the song');
+            Game.show_start();
             Socket.socket.on('startGame', function(data) {
                 Game.loading_end();
                 var game = new Game.Model({
@@ -358,40 +357,32 @@ define([
                     game_type: window.game_type
                 });
                 var gameView = new Game.View({
-                    model: game,
-                });
-                var user = new UserMeta.Model();
-                var userView = new UserMeta.View({
-                    model: user
+                    model: game
                 });
                 App.gameInstance = game;
                 App.gameView = gameView;
-                App.user = user;
 
                 $('#game-container').show();
-
-                vision.startVision($, sensor_hit, window.game_type);
-
-
             });
-        }
-
-        var video = $('#webcam')[0];
-        if (navigator.getUserMedia) {
-            navigator.getUserMedia({audio: false, video: true}, function(stream) {
-                video.src = stream;
-                 loadSoundManager();
-            }, null);
-        } else {
-            navigator.getMedia = navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
-            if (navigator.getMedia) {
-                navigator.getMedia({audio: true, video: true}, function(stream) {
-                    video.src = window.URL.createObjectURL(stream);
-                    loadSoundManager();
-                }, null);
-            }
-        }
-    }
+						Socket.socket.on('endGame', function() {
+							location.reload();
+						});
+						
+        };
+				
+				Socket.socket.on('info', function(data){
+					var user = new UserMeta.Model();
+					user.set('name', data.name);
+					var userView = new UserMeta.View({
+							model: user
+					});
+					App.user = user;
+					if(data.started)
+						Socket.startGame();
+				});
+				Game.loading_start('Loading game assets...');
+				loadSoundManager();
+    };
 
     return Game;
 });

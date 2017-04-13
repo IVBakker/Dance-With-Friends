@@ -3,7 +3,7 @@ define([
     'underscore',
     'backbone',
     'app',
-    'socket',
+    'socket'
 ], function($, _, Backbone, App, Socket) {
     var DanceParty = App.DanceParty || {};
 
@@ -11,7 +11,7 @@ define([
         
     });
 
-    DancePart.PersonView = Backbone.View.extend({
+    DanceParty.PersonView = Backbone.View.extend({
         tagName: 'div',
         className: 'person',
         template: _.template($('#template-person').html()),
@@ -23,7 +23,7 @@ define([
     DanceParty.Collection = Backbone.Collection.extend({
         model: DanceParty.PersonModel,
         initialize: function() {
-        },
+        }
     });
 
 });
